@@ -1,29 +1,69 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { CommonModule } from '@angular/common';
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
-  });
+    let component: AppComponent;
+    let fixture: any;
+    let httpTestingController: HttpTestingController;
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [AppComponent, HttpClientTestingModule, CommonModule], // Use imports for standalone components
+        }).compileComponents();
 
-  it(`should have the 'frontendMag' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('frontendMag');
-  });
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+        httpTestingController = TestBed.inject(HttpTestingController);
+    });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, frontendMag');
-  });
+    afterEach(() => {
+        httpTestingController.verify();
+    });
+
+    it('should create the component', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should have title as "Tabela"', () => {
+        expect(component.title).toBe('Tabela');
+    });
+
+    it('should set "podatki" with the data from API on successful fetch', () => {
+        const mockData = [
+            { id: 1, name: 'Test 1' },
+            { id: 2, name: 'Test 2' },
+        ];
+
+        component.ngOnInit();
+
+        const req = httpTestingController.expectOne('http://127.0.0.1:5000/table');
+        expect(req.request.method).toBe('GET');
+
+        req.flush(mockData);
+
+        expect(component.podatki).toEqual(mockData);
+        expect(component.loading).toBeFalse();
+    });
+
+    it('should set loading to false and log an error on API fetch failure', () => {
+        spyOn(console, 'error');
+
+        component.ngOnInit();
+
+        const req = httpTestingController.expectOne('http://127.0.0.1:5000/table');
+        expect(req.request.method).toBe('GET');
+
+        const errorEvent = new ErrorEvent('Network error');
+        req.error(errorEvent);
+
+        expect(component.podatki).toEqual([]);
+        expect(component.loading).toBeFalse();
+
+        expect(console.error).toHaveBeenCalledWith(
+            'Napaka pri nalaganju podatkov:',
+            jasmine.objectContaining({ error: errorEvent }) // Updated expectation
+        );
+    });
 });
