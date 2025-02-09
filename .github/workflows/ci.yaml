@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,12 +21,94 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Run linting (ESLint)
+        run: npm run lint --max-line-length=100
+
+  run-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version:
+          - "18"
+    name: Run tests
+    runs-on: ${{ matrix.os }}
+    outputs:
+      test-status: ${{ steps.run-tests.outputs.status }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
       - name: Run tests
         run: npm test
+        continue-on-error: true
 
-      - name: Upload coverage report
-        if: success() && always()
+      - name: Check status of tests
+        if: ${{ failure() }}
+        run: |
+          echo "tests failed"
+          echo "::set-output name=test-status::fail"
+          exit 1
+
+      - name: On success
+        if: ${{ success() }}
+        run: |
+          echo "::set-output name=test-status::success"
+          echo "tests passed!"
+
+  security_analysis:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version:
+          - "18"
+    name: Security analysis
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install security tool (e.g., npm audit)
+        run: npm audit --json > audit-report.json
+
+      - name: Upload security report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: coverage/
+          name: security-report
+          path: audit-report.json
+
+  notify:
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send failure email notification via MailerLite
+        run: |
+          # Define email content
+          SUBJECT="GitHub Actions Job Failed"
+          BODY="The GitHub Actions job has failed in the repository: ${{ github.repository }}. For details, check the actions logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          # Send email using MailerLite API
+          curl -X POST https://api.mailerlite.com/api/v2/email/send \
+            -H "Content-Type: application/json" \
+            -H "X-MailerLite-ApiKey: ${{ secrets.MAILERLITE_API_KEY }}" \
+            -d '{
+              "from": {
+                "email": "karin.lestnik@student.um.si",
+                "name": "GitHub Actions"
+              },
+              "to": [
+                {
+                  "email": "karin.lestnik@student.um.si",
+                  "name": "Karin Poprijan"
+                }
+              ],
+              "subject": "'$SUBJECT'",
+              "body": "'$BODY'",
+              "type": "text"
+            }'
