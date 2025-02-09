@@ -70,6 +70,7 @@ jobs:
         run: npm audit --audit-level=high
 
   notify:
+    needs: security-check
     if: failure()
     runs-on: ubuntu-latest
     steps:
