@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Run tests
-        run: npm test -- --watch=false --no-progress
+        run: npm test
 
       - name: Upload coverage report
         if: success() && always()
