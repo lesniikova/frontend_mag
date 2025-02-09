@@ -1,0 +1,23 @@
+<div *ngIf="loading" style="text-align: center; margin-top: 20px;">
+  <p>Nalaganje podatkov...</p>
+</div>
+
+<div *ngIf="!loading">
+  <h1 style="text-align: center;">{{ title }}</h1>
+  <table border="1" style="width: 80%; margin: 0 auto; border-collapse: collapse; text-align: center;">
+    <thead>
+    <tr>
+      <th>Ime</th>
+      <th>Starost</th>
+      <th>Mesto</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let oseba of podatki">
+      <td>{{ oseba.Ime }}</td>
+      <td>{{ oseba.Starost }}</td>
+      <td>{{ oseba.Mesto }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
