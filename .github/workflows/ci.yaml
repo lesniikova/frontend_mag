@@ -114,11 +114,9 @@ jobs:
     steps:
       - name: Send failure email notification via MailerLite
         run: |
-          # Define email content
-          SUBJECT="GitHub Actions Job Failed"
-          BODY="The GitHub Actions job has failed. For details, check the actions logs."
+          SUBJECT='GitHub Actions Job Failed'
+          BODY='The GitHub Actions job has failed in frontend-mag.'
 
-          # Send email using MailerLite API
           curl -X POST https://api.mailerlite.com/api/v2/email/send \
             -H "Content-Type: application/json" \
             -H "X-MailerLite-ApiKey: ${{ secrets.MAILERLITE_API_KEY }}" \
@@ -133,7 +131,7 @@ jobs:
                   "name": "Karin Poprijan"
                 }
               ],
-              "subject": "'$SUBJECT'",
-              "body": "'$BODY'",
+              "subject": "'"$SUBJECT"'",
+              "body": "'"$BODY"'",
               "type": "text"
             }'

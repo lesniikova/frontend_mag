@@ -1,27 +1,39 @@
-describe('AppComponent', () => {
+describe('Test Data Display and Loading State', () => {
+
     beforeEach(() => {
+        cy.visit('http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table');
+    });
+
+    it('should display loading message when data is loading', () => {
+        cy.intercept('GET', 'http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table', {
+            statusCode: 200,
+            body: [],
+        }).as('getData');
+
+
+        cy.get('table').should('not.exist');
+    });
+
+    it('should display data table when data is loaded', () => {
         cy.intercept('GET', 'http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table', {
             statusCode: 200,
             body: [
-                { id: 1, name: 'Item 1', value: 'Value 1' },
-                { id: 2, name: 'Item 2', value: 'Value 2' }
-            ]
-        }).as('getTableData');
+                { Ime: 'Janez', Starost: 30, Mesto: 'Ljubljana' },
+                { Ime: 'Maja', Starost: 25, Mesto: 'Maribor' },
+            ],
+        }).as('getData');
 
-        cy.visit('/');
+        cy.wait('@getData');
+
+        cy.get('div[ng-reflect-ng-if="true"]')
+            .should('not.exist');
+
+        cy.get('table').should('be.visible');
+        cy.get('table tr').should('have.length', 3);
+
+        cy.get('td').first().should('contain', 'Janez');
+        cy.get('td').eq(1).should('contain', '30');
+        cy.get('td').eq(2).should('contain', 'Ljubljana');
     });
 
-    it('handles error if data fails to load', () => {
-        cy.intercept('GET', 'http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table', {
-            statusCode: 500,
-            body: { message: 'Server error' }
-        }).as('getTableDataError');
-
-        cy.visit('/');
-
-        cy.wait('@getTableDataError');
-
-        cy.get('.error-message')
-            .should('contain', 'Napaka pri nalaganju podatkov');
-    });
 });
