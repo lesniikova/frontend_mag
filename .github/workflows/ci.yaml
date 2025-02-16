@@ -98,14 +98,14 @@ jobs:
       - name: Install and configure the Koyeb CLI
         uses: koyeb-community/install-koyeb-cli@v2
         with:
-          api_token: "${{ secrets.KOYEB_API_TOKEN_UI }}"
+          api_token: "${{ secrets.KOYEB_API_TOKEN }}"
           github_token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Deploy to Koyeb
         run: koyeb service redeploy spare-leandra-university-of-maribor/frontend-mag
         env:
-          application_id: ${{ secrets.KOYEB_APPLICATION_ID_UI }}
-          api_token: ${{ secrets.KOYEB_API_TOKEN_UI }}
+          application_id: ${{ secrets.KOYEB_APPLICATION_ID }}
+          api_token: ${{ secrets.KOYEB_API_TOKEN }}
 
   notify:
     needs: deploy-ui
