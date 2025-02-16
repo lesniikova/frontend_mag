@@ -1,9 +1,20 @@
-FROM --platform=linux/amd64 node:18-alpine
+# Use Node.js as the base image
+FROM node:18
+
+# Set the working directory inside the container
 WORKDIR /app
-COPY . .
+
+# Copy package.json and package-lock.json
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
-COPY . app
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
+
+# Copy the rest of the app source code
+COPY . .
+
+# Expose the Angular dev server port
+EXPOSE 4200
+
+# Start the Angular development server
+CMD ["npm", "run", "start", "--", "--host", "0.0.0.0"]
