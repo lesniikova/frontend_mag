@@ -102,7 +102,7 @@ jobs:
           github_token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Deploy to Koyeb
-        run: koyeb service redeploy spare-leandra-university-of-maribor/frontend-mag
+        run: koyeb service redeploy spare-leandra/frontend-mag
         env:
           application_id: ${{ secrets.KOYEB_APPLICATION_ID }}
           api_token: ${{ secrets.KOYEB_API_TOKEN }}
