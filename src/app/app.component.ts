@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.http.get<any[]>('http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table')
+    this.http.get<any[]>('http://crucial-kali-backend-mag.koyeb.app/table')
       .subscribe({
         next: (data) => {
           this.podatki = data;

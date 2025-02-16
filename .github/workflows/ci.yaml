@@ -117,7 +117,7 @@ jobs:
           SUBJECT='GitHub Actions Job Failed'
           BODY='The GitHub Actions job has failed in frontend-mag.'
 
-          curl -X POST https://api.mailerlite.com/api/v2/email/send \
+          curl -X POST https://connect.mailerlite.com/api \
             -H "Content-Type: application/json" \
             -H "X-MailerLite-ApiKey: ${{ secrets.MAILERLITE_API_KEY }}" \
             -d '{
