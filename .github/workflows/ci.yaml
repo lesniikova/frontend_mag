@@ -116,7 +116,7 @@ jobs:
         run: |
           # Define email content
           SUBJECT="GitHub Actions Job Failed"
-          BODY="The GitHub Actions job has failed in the repository: ${{ github.repository }}. For details, check the actions logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          BODY="The GitHub Actions job has failed. For details, check the actions logs."
 
           # Send email using MailerLite API
           curl -X POST https://api.mailerlite.com/api/v2/email/send \
