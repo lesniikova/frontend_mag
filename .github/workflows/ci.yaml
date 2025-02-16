@@ -93,7 +93,7 @@ jobs:
           IMAGE_NAME: karinlesnik/frontend-mag
           TAG: latest
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE_NAME:$TAG --push src/client/bike_ui
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE_NAME:$TAG --push .
 
       - name: Install and configure the Koyeb CLI
         uses: koyeb-community/install-koyeb-cli@v2
