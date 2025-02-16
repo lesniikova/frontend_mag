@@ -38,7 +38,7 @@ describe('AppComponent', () => {
 
         component.ngOnInit();
 
-        const req = httpTestingController.expectOne('http://127.0.0.1:5000/table');
+        const req = httpTestingController.expectOne('http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table');
         expect(req.request.method).toBe('GET');
 
         req.flush(mockData);
@@ -53,7 +53,7 @@ describe('AppComponent', () => {
 
         component.ngOnInit();
 
-        const req = httpTestingController.expectOne('http://127.0.0.1:5000/table');
+        const req = httpTestingController.expectOne('http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table');
         expect(req.request.method).toBe('GET');
 
         const errorEvent = new ErrorEvent('Network error');
