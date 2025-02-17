@@ -1,24 +1,20 @@
-# Use Node 18 (or later) to match Angular requirements
-FROM node:18-alpine
+# Use Node.js as the base image
+FROM node:18
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json first (to optimize Docker caching)
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application files
+# Copy the rest of the app source code
 COPY . .
 
-# Build the Angular app
-RUN npm run build
+# Expose the Angular dev server port
+EXPOSE 4200
 
-# Expose the correct port
-EXPOSE 80
-
-# Use a lightweight web server to serve the built Angular app
-RUN npm install -g http-server
-CMD ["http-server", "dist/frontend-mag", "-p", "80"]
+# Start the Angular development server
+CMD ["npm", "run", "start", "--", "--host", "0.0.0.0"]

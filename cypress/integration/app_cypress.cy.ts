@@ -1,11 +1,11 @@
 describe('Test Data Display and Loading State', () => {
 
     beforeEach(() => {
-        cy.visit('http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table');
+        cy.visit('http://reasonable-clerissa-backend-mag-2f86a963.koyeb.app/table');
     });
 
     it('should display loading message when data is loading', () => {
-        cy.intercept('GET', 'http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table', {
+        cy.intercept('GET', 'http://reasonable-clerissa-backend-mag-2f86a963.koyeb.app/table', {
             statusCode: 200,
             body: [],
         }).as('getData');
@@ -15,7 +15,7 @@ describe('Test Data Display and Loading State', () => {
     });
 
     it('should display data table when data is loaded', () => {
-        cy.intercept('GET', 'http://crucial-kali-backend-mag-8b88b11c.koyeb.app/table', {
+        cy.intercept('GET', 'http://reasonable-clerissa-backend-mag-2f86a963.koyeb.app/table', {
             statusCode: 200,
             body: [
                 { Ime: 'Janez', Starost: 30, Mesto: 'Ljubljana' },
